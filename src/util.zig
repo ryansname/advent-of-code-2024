@@ -45,6 +45,20 @@ pub fn parseFn(comptime ty: type) fn ([]const u8) ty {
 }
 
 // 2D stuff
+pub fn makeSafeGrid(bounded_array: anytype, grid: []const u8, row_delim: u8, sentinel: u8) !struct { []const u8, usize } {
+    const stride = 2 + (mem.indexOfScalar(u8, grid, row_delim) orelse return error.NoNewline);
+
+    try bounded_array.appendNTimes(sentinel, stride);
+    var lines = iterLines(grid);
+    while (lines.next()) |line| {
+        try bounded_array.append(sentinel);
+        try bounded_array.appendSlice(line);
+        try bounded_array.append(sentinel);
+    }
+    try bounded_array.appendNTimes(sentinel, stride);
+    return .{ bounded_array.slice(), stride };
+}
+
 pub fn Dir(comptime dirs: u8) type {
     return switch (dirs) {
         4 => enum {

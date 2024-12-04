@@ -12,18 +12,8 @@ pub fn main() !void {
     std.log.info("Part 2: {}", .{try solve(2, real_input)});
 }
 fn solve(comptime part: u2, raw_input: []const u8) !i64 {
-    var input_builder = try std.BoundedArray(u8, 1024 * 1024).init(0);
-    const stride = 2 + (mem.indexOfScalar(u8, raw_input, '\n') orelse return error.NoNewline);
-
-    try input_builder.appendNTimes('.', stride);
-    var lines = util.iterLines(raw_input);
-    while (lines.next()) |line| {
-        try input_builder.append('.');
-        try input_builder.appendSlice(line);
-        try input_builder.append('.');
-    }
-    try input_builder.appendNTimes('.', stride);
-    const input = input_builder.slice();
+    var buf = try std.BoundedArray(u8, 1024 * 1024).init(0);
+    const input, const stride = try util.makeSafeGrid(&buf, raw_input, '\n', '.');
 
     var count: i64 = 0;
     if (part == 1) {
