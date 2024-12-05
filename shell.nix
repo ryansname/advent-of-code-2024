@@ -3,8 +3,7 @@
 }: 
 
 let 
-  pkgs_rl = import (fetchTarball "https://github.com/ryansname/nix/archive/3b7e5fe.tar.gz") { inherit pkgs; };
-  zig_ver = "0.14.0-dev.2371+c013f45ad";
+  pkgs_rl = import (fetchTarball "https://github.com/ryansname/nix/archive/7a9407e.tar.gz") { inherit pkgs; };
 in
 pkgs.mkShell {
   nativeBuildInputs = [
@@ -19,7 +18,7 @@ pkgs.mkShell {
     pkgs.golangci-lint
     pkgs.golangci-lint-langserver
 
-    (pkgs_rl.zig { version = zig_ver; })
-    (pkgs_rl.zls { version = "532cc25"; srcHash = "sha256-i33Ez/uYy6VzhByudLOUlNTMmqb+T+gu5m0nEyMr7wA="; zigVersion = zig_ver; })
+    pkgs_rl.zig
+    pkgs_rl.zls
   ];
 }
