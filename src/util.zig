@@ -105,12 +105,24 @@ pub fn indexForDir(dir: anytype, idx: usize, stride: usize) usize {
     @compileError("Unsupported type " ++ @typeName(@TypeOf(dir)));
 }
 
-pub fn rotateRight(dir: Dir(4)) Dir(4) {
-    return switch (dir) {
-        .N => .E,
-        .E => .S,
-        .S => .W,
-        .W => .N,
+pub fn rotateRight(dir: anytype) @TypeOf(dir) {
+    return switch (@TypeOf(dir)) {
+        Dir(4) => switch (dir) {
+            .N => .E,
+            .E => .S,
+            .S => .W,
+            .W => .N,
+        },
+        Dir(8) => switch (dir) {
+            .N => .NE,
+            .NE => .E,
+            .E => .SE,
+            .SE => .S,
+            .S => .SW,
+            .SW => .W,
+            .W => .NW,
+        },
+        else => @compileError("Unsupported type" ++ @typeName(@TypeOf(dir))),
     };
 }
 
