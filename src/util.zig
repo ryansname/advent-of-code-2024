@@ -45,7 +45,7 @@ pub fn parseFn(comptime ty: type) fn ([]const u8) ty {
 }
 
 // 2D stuff
-pub fn makeSafeGrid(bounded_array: anytype, grid: []const u8, row_delim: u8, sentinel: u8) !struct { []const u8, usize } {
+pub fn makeSafeGrid(bounded_array: anytype, grid: []const u8, row_delim: u8, sentinel: u8) !struct { []u8, usize } {
     const stride = 2 + (mem.indexOfScalar(u8, grid, row_delim) orelse return error.NoNewline);
 
     try bounded_array.appendNTimes(sentinel, stride);
@@ -103,6 +103,15 @@ pub fn indexForDir(dir: anytype, idx: usize, stride: usize) usize {
         };
     }
     @compileError("Unsupported type " ++ @typeName(@TypeOf(dir)));
+}
+
+pub fn rotateRight(dir: Dir(4)) Dir(4) {
+    return switch (dir) {
+        .N => .E,
+        .E => .S,
+        .S => .W,
+        .W => .N,
+    };
 }
 
 pub fn NeighboursReturn(comptime dirs: u8, comptime BufferType: type) type {
