@@ -7,17 +7,23 @@ const util = @import("util.zig");
 const real_input = @embedFile("input/day11.txt");
 
 pub fn main() !void {
-    std.log.info("Part 1: {}", .{try part1(25, real_input)});
-    std.log.info("Part 2: {}", .{try part1(75, real_input)});
+    std.debug.print("Part 1: {}\n", .{try part1(25, real_input)});
+    std.debug.print("Part 2: {}\n", .{try part1(75, real_input)});
+    std.debug.print("Part 3 (beat JS @ 1693): {}\n", .{try part1(1694, real_input)});
+    std.debug.print("10,001: {}\n", .{try part1(10_001, real_input)});
+    std.debug.print("20,000: {}\n", .{try part1(20_000, real_input)});
+    // std.log.info("Part 3: {}", .{try part1(200, real_input)});
 }
+
+const biggerint = u2560;
 
 const Block = struct {
     value: u64,
-    count: usize,
-    count_b: usize,
+    count: biggerint,
+    count_b: biggerint,
 };
 
-fn addToBlockValue(value: u64, count: usize, blocks: anytype) !void {
+fn addToBlockValue(value: u64, count: biggerint, blocks: anytype) !void {
     for (blocks.slice()) |*b| {
         if (b.value == value) {
             b.count_b += count;
@@ -32,7 +38,7 @@ fn addToBlockValue(value: u64, count: usize, blocks: anytype) !void {
     };
 }
 
-fn part1(blinks: usize, input: []const u8) !i64 {
+fn part1(blinks: biggerint, input: []const u8) !biggerint {
     var blocks_buffer = try std.BoundedArray(Block, 10240).init(0);
 
     var token_iter = util.iterTokens(std.mem.trim(u8, input, "\n "));
@@ -45,7 +51,8 @@ fn part1(blinks: usize, input: []const u8) !i64 {
         b.count_b = 0;
     }
 
-    for (0..blinks) |_| {
+    var i: biggerint = 0;
+    while (i < blinks) : (i += 1) {
         // defer std.debug.print("\n", .{});
         for (blocks_buffer.slice()) |block| {
             if (block.value == 0) {
@@ -77,7 +84,7 @@ fn part1(blinks: usize, input: []const u8) !i64 {
         }
     }
 
-    var blocks: i64 = 0;
+    var blocks: biggerint = 0;
     for (blocks_buffer.slice()) |b| blocks += @intCast(b.count);
     return blocks;
 }
