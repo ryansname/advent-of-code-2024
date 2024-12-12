@@ -127,7 +127,7 @@ pub fn rotateRight(dir: anytype) @TypeOf(dir) {
 }
 
 pub fn NeighboursReturn(comptime dirs: u8, comptime BufferType: type) type {
-    return [dirs]struct { char: @typeInfo(BufferType).Pointer.child, idx: usize, dir: Dir(dirs) };
+    return [dirs]struct { char: @typeInfo(BufferType).pointer.child, idx: usize, dir: Dir(dirs) };
 }
 
 pub fn getNeighbours(comptime dirs: u8, buffer: anytype, i: usize, stride: usize) NeighboursReturn(dirs, @TypeOf(buffer)) {
